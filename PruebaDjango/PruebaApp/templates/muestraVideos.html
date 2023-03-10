@@ -1,0 +1,24 @@
+{%extends 'base.html' %}
+{% block content %}
+  
+  <iframe width="350"
+   height="350"
+   src="https://www.youtube.com/embed/z_Xoyqzqx1I"
+   title="titulo de video a mi pinta"
+   frameborder="0"
+   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+   allowfullscreen></iframe>
+   {% for post in posts %}
+        <div class="post">
+        <div class="date">
+            {{post.fecha_creacion}}
+        </div>
+        <h1><a href="">{{post.titulo}}</a></h1
+        <p>{{ post.texto}}</p>
+        <div class="date">
+            {{post.autor}}
+        </div>
+        </div>
+        <hr>
+    {% endfor %}
+{% endblock content %}
