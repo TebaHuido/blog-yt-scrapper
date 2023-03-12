@@ -8,5 +8,5 @@ class Post(models.Model):
     fecha_creacion = models.DateTimeField(auto_now_add=True)
 class Videos(models.Model):
     titulo = models.CharField(max_length=200)
-    link = models.CharField(max_length=200)
+    id = models.CharField(max_length=200)
     fecha_creacion = models.DateTimeField(auto_now_add=True)

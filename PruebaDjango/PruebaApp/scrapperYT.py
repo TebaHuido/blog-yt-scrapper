@@ -4,32 +4,45 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 import pandas as pd
 import time
-def scrapSelenium():
+
+class Video:
+    instances = []
+    def __init__(self, title, id, channel):
+        self.channel = channel
+        self.title = title
+        self.id = id
+        _current_index = 0
+        self.__class__.instances.append(self)
+    def __iter__(self):
+        return self
+    def __next__(self):
+        if len(self.instances) < self._current_index:
+            return self.instances[self._current_index]
+        else:
+            raise StopIteration
+    def __str__(self):
+        return self.title + " " + self.id + " " + self.channel
+def scrapChannel(channel : str,limite):
     options=Options()
     options.headless=False
     driver=webdriver.Chrome(executable_path=r'chromedriver', options=options)
-    driver.get("https://www.youtube.com/@FusgoTV/videos")
+    driver.get("https://www.youtube.com/@"+channel+"/videos")
     driver.maximize_window()
 
     last_height = driver.execute_script("return document.documentElement.scrollHeight")
     while True:
-        driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
         time.sleep(2)
+        videos = driver.find_elements("xpath",'//*[@id="video-title-link"]')
+        if len(videos)>=limite+1 :
+            break
+        driver.execute_script("window.scrollTo(0, document.documentElement.scrollHeight);")
         new_height = driver.execute_script("return document.documentElement.scrollHeight")
         if new_height == last_height:
             break
         last_height = new_height
-    videos = driver.find_elements("xpath",'//*[@id="video-title-link"]')
+        
+    n=0
     for video in videos:
         if(video.get_attribute("href")!= None):
-            print(video.get_attribute("href"))
-scrapSelenium()
-
-
-def try1():
-    page = requests.get("https://www.youtube.com/@FusgoTV/videos")
-    soup = BeautifulSoup(page.content, 'html.parser')
-    print ("quee")
-    #listalinks = soup.find_all()
-    for a in soup.find_all(class_ = 'yt-simple-endpoint inline-block style-scope ytd-thumbnail', href=True):
-        print("Found the URL:", a['href'])
+            Video(video.get_attribute("title"),video.get_attribute("href")[32 : 43],channel)
+    return Video.instances[0:limite]
