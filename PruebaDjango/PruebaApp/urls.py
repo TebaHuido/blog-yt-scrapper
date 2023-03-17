@@ -3,4 +3,5 @@ from  . import views
 urlpatterns = [
 path('', views.posts),
 path('videos/', views.videos),
+path('sync/', views.vidsync),
 ]
